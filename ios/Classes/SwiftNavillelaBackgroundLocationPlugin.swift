@@ -43,6 +43,7 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
           result(true)
       case services.stop_location_service.rawValue:
           SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: services.stop_location_service.rawValue)
+          SwiftNavillelaBackgroundLocationPlugin.locationManager?.stopUpdatingLocation()
           result(true)
       default:
           result(false)
