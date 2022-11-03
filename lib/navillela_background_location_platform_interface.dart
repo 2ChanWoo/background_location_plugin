@@ -1,3 +1,4 @@
+import 'package:navillela_background_location/location.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'navillela_background_location_method_channel.dart';
@@ -23,7 +24,15 @@ abstract class NavillelaBackgroundLocationPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<bool?> startLocationService(double distanceFilter) {
+    throw UnimplementedError("startLocationService is unimplemented.");
+  }
+
+  Future<bool?> stopLocationService() {
+    throw UnimplementedError("stopLocationService is unimplemented.");
+  }
+
+  getLocationUpdates(Function(Location) location) {
+    throw UnimplementedError("getLocationUpdates is unimplemented.");
   }
 }
