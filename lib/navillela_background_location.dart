@@ -16,7 +16,7 @@ class NavillelaBackgroundLocation {
     return NavillelaBackgroundLocationPlatform.instance.stopLocationService();
   }
 
-  static getLocationUpdates(Function(Location) location) {
+  static getLocationUpdates(Function(Location?) location) {
     NavillelaBackgroundLocationPlatform.instance.getLocationUpdates((location));
   }
 }

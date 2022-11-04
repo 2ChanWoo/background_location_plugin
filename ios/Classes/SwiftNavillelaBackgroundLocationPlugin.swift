@@ -64,4 +64,8 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
 
         SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: location)
     }
+    
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: nil)
+    }
 }
