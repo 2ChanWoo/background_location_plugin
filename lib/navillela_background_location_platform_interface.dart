@@ -32,7 +32,7 @@ abstract class NavillelaBackgroundLocationPlatform extends PlatformInterface {
     throw UnimplementedError("stopLocationService is unimplemented.");
   }
 
-  getLocationUpdates(Function(Location) location) {
+  getLocationUpdates(Function(Location?) location) {
     throw UnimplementedError("getLocationUpdates is unimplemented.");
   }
 }
