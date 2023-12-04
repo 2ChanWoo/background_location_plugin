@@ -51,16 +51,34 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
   }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = [
+                
+        var ellipsoidalAltitude : Optional<Double>
+       
+        if #available(iOS 15, *) {
+            ellipsoidalAltitude = locations.last?.ellipsoidalAltitude
+        } else {
+            ellipsoidalAltitude = nil
+        }
+        
+        var location = [
             "speed": locations.last!.speed,
             "altitude": locations.last!.altitude,
+            "ellipsoidalAltitude": ellipsoidalAltitude,
+            "horizontalAccuracy": locations.last?.horizontalAccuracy,
+            "verticalAccuracy": locations.last?.verticalAccuracy,
+            "courseAccuracy": nil,
+//            "sourceInformation": (UIDevice.current.systemVersion >= "15.0") ? locations.last?.sourceInformation : nil,
             "latitude": locations.last!.coordinate.latitude,
             "longitude": locations.last!.coordinate.longitude,
             "accuracy": locations.last!.horizontalAccuracy,
             "bearing": locations.last!.course,
             "time": locations.last!.timestamp.timeIntervalSince1970 * 1000,
-            "is_mock": false
-        ] as [String : Any]
+            "is_mock": false,
+        ] as [String : Any?]
+        if #available(iOS 15, *) {
+            location["isProducedByAccessory"] = locations.last?.sourceInformation?.isProducedByAccessory
+            location["isSimulatedBySoftware"] = locations.last?.sourceInformation?.isSimulatedBySoftware
+        }
 
         SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: location)
     }

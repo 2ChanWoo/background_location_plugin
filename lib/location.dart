@@ -7,6 +7,13 @@ class Location {
   double? speed;
   double? time;
   bool? isMock;
+  double? ellipsoidalAltitude;
+  double? horizontalAccuracy;
+  double? verticalAccuracy;
+  double? courseAccuracy;
+  bool? isProducedByAccessory;
+  bool? isSimulatedBySoftware;
+  // sourceInformation;
 
   Location(
       {this.longitude,
@@ -16,7 +23,13 @@ class Location {
       this.bearing,
       this.speed,
       this.time,
-      this.isMock});
+      this.isMock,
+      this.ellipsoidalAltitude,
+      this.horizontalAccuracy,
+      this.verticalAccuracy,
+      this.courseAccuracy,
+      this.isProducedByAccessory,
+      this.isSimulatedBySoftware,});
 
   toMap() {
     var obj = {
@@ -27,7 +40,13 @@ class Location {
       'accuracy': accuracy,
       'speed': speed,
       'time': time,
-      'is_mock': isMock
+      'is_mock': isMock,
+      'ellipsoidalAltitude': ellipsoidalAltitude,
+      'horizontalAccuracy': horizontalAccuracy,
+      'verticalAccruracy': verticalAccuracy,
+      'courseAccuracy': courseAccuracy,
+      'isProducedByAccessory': isProducedByAccessory,
+      'isSimulatedBySoftware': isSimulatedBySoftware,
     };
     return obj;
   }
