@@ -31,20 +31,20 @@ class MethodChannelNavillelaBackgroundLocation extends NavillelaBackgroundLocati
   /// Register a function to recive location updates as long as the location
   /// service has started
   @override
-  getLocationUpdates(Function(Location?) location) {
+  getLocationUpdates(Function(Location?) callback) {
     // add a handler on the channel to recive updates from the native classes
     methodChannel.setMethodCallHandler((MethodCall methodCall) async {
       if (methodCall.method == 'location') {
 
         //위치 측정에 실패하여 locationManager - didFailWithError 가 호출될 경우
         if(methodCall.arguments == null) {
-          location(null);
+          callback(null);
           return;
         }
 
         var locationData = Map.from(methodCall.arguments);
         // Call the user passed function
-        location(
+        callback(
           Location(
               latitude: locationData['latitude'],
               longitude: locationData['longitude'],
