@@ -30,12 +30,8 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
       
       SwiftNavillelaBackgroundLocationPlugin.locationManager?.pausesLocationUpdatesAutomatically = false
       
-      SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: "method")
-      
       switch call.method {
       case services.start_location_service.rawValue:
-          SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: services.stop_location_service.rawValue)
-          
           let args = call.arguments as? Dictionary<String, Any>
           let distanceFilter = args?["distance_filter"] as? Double
           SwiftNavillelaBackgroundLocationPlugin.locationManager?.distanceFilter = distanceFilter ?? 0
