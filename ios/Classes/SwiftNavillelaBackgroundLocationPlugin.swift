@@ -12,6 +12,25 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
     static var locationManager : CLLocationManager?
     static var channel : FlutterMethodChannel?
     
+    override init() {
+        SwiftNavillelaBackgroundLocationPlugin.locationManager = CLLocationManager()
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestAlwaysAuthorization()
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.allowsBackgroundLocationUpdates = true
+        /// iOS 16.4 16.5 16.6 => background location fetch issue.
+        /// ㄴ> https://developer.apple.com/forums/thread/726945
+//           let distanceFilter = args?["distance_filter"] as? Double
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.distanceFilter = kCLDistanceFilterNone
+        
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.showsBackgroundLocationIndicator = true
+                
+        //SwiftNavillelaBackgroundLocationPlugin.locationManager?.desiredAccuracy = kCLLocationAccuracyKilometer
+        //SwiftNavillelaBackgroundLocationPlugin.locationManager?.activityType = CLActivityType.automotiveNavigation
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.pausesLocationUpdatesAutomatically = false
+        
+        super.init()
+        SwiftNavillelaBackgroundLocationPlugin.locationManager?.delegate = self // super.init() 아래에 선언해야 함
+    }
+    
   public static func register(with registrar: FlutterPluginRegistrar) {
     channel = FlutterMethodChannel(name: "navillela_background_location", binaryMessenger: registrar.messenger())
     let instance = SwiftNavillelaBackgroundLocationPlugin()
@@ -19,22 +38,10 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-      SwiftNavillelaBackgroundLocationPlugin.locationManager = CLLocationManager()
-      SwiftNavillelaBackgroundLocationPlugin.locationManager?.delegate = self
-      SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestAlwaysAuthorization()
-      SwiftNavillelaBackgroundLocationPlugin.locationManager?.allowsBackgroundLocationUpdates = true
-      
-      if #available(iOS 11.0, *) {
-          SwiftNavillelaBackgroundLocationPlugin.locationManager?.showsBackgroundLocationIndicator = true
-      }
-      
-      SwiftNavillelaBackgroundLocationPlugin.locationManager?.pausesLocationUpdatesAutomatically = false
-      
       switch call.method {
       case services.start_location_service.rawValue:
           let args = call.arguments as? Dictionary<String, Any>
-          let distanceFilter = args?["distance_filter"] as? Double
-          SwiftNavillelaBackgroundLocationPlugin.locationManager?.distanceFilter = distanceFilter ?? 0
+
           SwiftNavillelaBackgroundLocationPlugin.locationManager?.startUpdatingLocation()
           result(true)
       case services.stop_location_service.rawValue:
@@ -80,6 +87,12 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("location", arguments: nil)
+        print("SwiftNavillelaBackgroundLocationPlugin/didFailWithError :: \(error))")
+        SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("didFailWithError", arguments: error)
+    }
+    
+    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        print("SwiftNavillelaBackgroundLocationPlugin/locationManagerDidPauseLocationUpdates :: ")
+        SwiftNavillelaBackgroundLocationPlugin.channel?.invokeMethod("locationManagerDidPauseLocationUpdates", arguments: nil)
     }
 }
