@@ -25,17 +25,18 @@ class MethodChannelNavillelaBackgroundLocation extends NavillelaBackgroundLocati
 
   @override
   Future<bool?> stopLocationService() async {
-    await methodChannel.invokeMethod(Services.stop_location_service.name);
+    return await methodChannel.invokeMethod(Services.stop_location_service.name);
   }
 
   /// Register a function to recive location updates as long as the location
   /// service has started
   @override
-  getLocationUpdates(Function(Location?) callback) {
+  getLocationUpdates(Function(Location?) callback, {Function(dynamic)? error, Function? paused}) {
     // add a handler on the channel to recive updates from the native classes
     methodChannel.setMethodCallHandler((MethodCall methodCall) async {
-      if (methodCall.method == 'location') {
+      debugPrint("methodChannel.setMethodCallHandler :${methodCall.method}: arg: ${methodCall.arguments}");
 
+      if (methodCall.method == 'location') {
         //위치 측정에 실패하여 locationManager - didFailWithError 가 호출될 경우
         if(methodCall.arguments == null) {
           callback(null);
@@ -46,15 +47,30 @@ class MethodChannelNavillelaBackgroundLocation extends NavillelaBackgroundLocati
         // Call the user passed function
         callback(
           Location(
-              latitude: locationData['latitude'],
-              longitude: locationData['longitude'],
-              altitude: locationData['altitude'],
-              accuracy: locationData['accuracy'],
-              bearing: locationData['bearing'],
-              speed: locationData['speed'],
-              time: locationData['time'],
-              isMock: locationData['is_mock']),
+            latitude: locationData['latitude'],
+            longitude: locationData['longitude'],
+            altitude: locationData['altitude'],
+            accuracy: locationData['accuracy'],
+            bearing: locationData['bearing'],
+            speed: locationData['speed'],
+            time: locationData['time'],
+            isMock: locationData['is_mock'],
+            ellipsoidalAltitude: locationData['ellipsoidalAltitude'],
+            horizontalAccuracy: locationData['horizontalAccuracy'],
+            verticalAccuracy: locationData['verticalAccuracy'],
+            courseAccuracy: locationData['courseAccuracy'],
+            isProducedByAccessory: locationData['isProducedByAccessory'],
+            isSimulatedBySoftware: locationData['isSimulatedBySoftware'],
+          ),
         );
+      } else if(methodCall.method == "locationManagerDidPauseLocationUpdates") {
+        if(paused != null) {
+          paused();
+        }
+      } else if(methodCall.method == "didFailWithError") {
+        if(error != null) {
+          error(methodCall.arguments);
+        }
       }
     });
   }
