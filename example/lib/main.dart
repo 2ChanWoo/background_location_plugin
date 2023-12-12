@@ -8,6 +8,8 @@ void main() {
   runApp(const MyApp());
 }
 
+bool on = false;
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -31,8 +33,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _navillelaBackgroundLocationPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      // platformVersion =
+      //     await _navillelaBackgroundLocationPlugin.getPlatformVersion() ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      // _platformVersion = platformVersion;
     });
   }
 
@@ -55,7 +57,24 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: ElevatedButton(child: Text('UpdateLocation'), onPressed: () {
+            if(!on) {
+              on = true;
+                NavillelaBackgroundLocation.startLocationService();
+                NavillelaBackgroundLocation.getLocationUpdates(callback: (location) {
+                  print("location data >> ${location!.toMap()}");
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text("title >> ${location.toMap()}"),
+                      duration: const Duration(seconds: 2),
+                    ));
+                });
+              } else {
+              NavillelaBackgroundLocation.stopLocationService();
+              on = false;
+            }
+            },),
         ),
       ),
     );
