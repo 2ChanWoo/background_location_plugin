@@ -5,7 +5,7 @@ class Location {
   double? bearing;
   double? accuracy;
   double? speed;
-  double? time;
+  String? time;
   bool? isMock;
   double? ellipsoidalAltitude;
   double? horizontalAccuracy;
@@ -43,7 +43,7 @@ class Location {
       'is_mock': isMock,
       'ellipsoidalAltitude': ellipsoidalAltitude,
       'horizontalAccuracy': horizontalAccuracy,
-      'verticalAccruracy': verticalAccuracy,
+      'verticalAccuracy': verticalAccuracy,
       'courseAccuracy': courseAccuracy,
       'isProducedByAccessory': isProducedByAccessory,
       'isSimulatedBySoftware': isSimulatedBySoftware,
