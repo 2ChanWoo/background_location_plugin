@@ -40,8 +40,6 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       switch call.method {
       case services.start_location_service.rawValue:
-          let args = call.arguments as? Dictionary<String, Any>
-
           SwiftNavillelaBackgroundLocationPlugin.locationManager?.startUpdatingLocation()
           result(true)
       case services.stop_location_service.rawValue:
@@ -63,6 +61,11 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
             ellipsoidalAltitude = nil
         }
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let date = locations.last!.timestamp
+        let dateString = dateFormatter.string(from: date)
+        
         var location = [
             "speed": locations.last!.speed,
             "altitude": locations.last!.altitude,
@@ -75,7 +78,7 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
             "longitude": locations.last!.coordinate.longitude,
             "accuracy": locations.last!.horizontalAccuracy,
             "bearing": locations.last!.course,
-            "time": locations.last!.timestamp.timeIntervalSince1970 * 1000,
+            "time": dateString,
             "is_mock": false,
         ] as [String : Any?]
         if #available(iOS 15, *) {
