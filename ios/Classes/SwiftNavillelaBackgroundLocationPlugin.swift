@@ -18,6 +18,7 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
         
         // requestWhenInUseAuthorization 을 먼저 해 주어야 함.
         // 바로 requestAlwaysAuthorization 을 날리면, While using app 까지가 최선인데 문제는 While using app 상태어도 Always 가 반환이 됨.
+        // ㄴ> https://developer.apple.com/documentation/corelocation/cllocationmanager/1620551-requestalwaysauthorization#3578736
 //        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestWhenInUseAuthorization()
 //        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestAlwaysAuthorization()
         SwiftNavillelaBackgroundLocationPlugin.locationManager?.allowsBackgroundLocationUpdates = true
