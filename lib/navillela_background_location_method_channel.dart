@@ -34,7 +34,7 @@ class MethodChannelNavillelaBackgroundLocation extends NavillelaBackgroundLocati
   getLocationUpdates(Function(Location?) callback, {Function(dynamic)? error, Function? paused}) {
     // add a handler on the channel to recive updates from the native classes
     methodChannel.setMethodCallHandler((MethodCall methodCall) async {
-      debugPrint("methodChannel.setMethodCallHandler :${methodCall.method}: arg: ${methodCall.arguments}");
+      // debugPrint("methodChannel.setMethodCallHandler :${methodCall.method}: arg: ${methodCall.arguments}");
 
       if (methodCall.method == 'location') {
         //위치 측정에 실패하여 locationManager - didFailWithError 가 호출될 경우

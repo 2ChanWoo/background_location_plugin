@@ -13,8 +13,13 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
     static var channel : FlutterMethodChannel?
     
     override init() {
+        debugPrint("SwiftNavillelaBackgroundLocationPlugin init()")
         SwiftNavillelaBackgroundLocationPlugin.locationManager = CLLocationManager()
-        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestAlwaysAuthorization()
+        
+        // requestWhenInUseAuthorization 을 먼저 해 주어야 함.
+        // 바로 requestAlwaysAuthorization 을 날리면, While using app 까지가 최선인데 문제는 While using app 상태어도 Always 가 반환이 됨.
+//        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestWhenInUseAuthorization()
+//        SwiftNavillelaBackgroundLocationPlugin.locationManager?.requestAlwaysAuthorization()
         SwiftNavillelaBackgroundLocationPlugin.locationManager?.allowsBackgroundLocationUpdates = true
         /// iOS 16.4 16.5 16.6 => background location fetch issue.
         /// ㄴ> https://developer.apple.com/forums/thread/726945
@@ -24,7 +29,7 @@ public class SwiftNavillelaBackgroundLocationPlugin: NSObject, FlutterPlugin, CL
         SwiftNavillelaBackgroundLocationPlugin.locationManager?.showsBackgroundLocationIndicator = true
                 
         //SwiftNavillelaBackgroundLocationPlugin.locationManager?.desiredAccuracy = kCLLocationAccuracyKilometer
-        //SwiftNavillelaBackgroundLocationPlugin.locationManager?.activityType = CLActivityType.automotiveNavigation
+        //SwiftNavillelaBackgroundLocationPlugin.locationManager?.activityType = CLActivityType.automotiveNavigation // other 가 기본값.
         SwiftNavillelaBackgroundLocationPlugin.locationManager?.pausesLocationUpdatesAutomatically = false
         
         super.init()
